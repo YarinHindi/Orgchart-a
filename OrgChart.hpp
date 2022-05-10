@@ -1,4 +1,3 @@
-
 #include <vector>
 #pragma once
 #include "Node.cpp"
@@ -49,9 +48,52 @@ namespace ariel {
             }
              return nullptr;
         }
+        static vector<vector<string>> pre_output(vector<vector<string>>& ans,Node *root){
+            deque<Node*> beforeans;
+            vector<string>templist;
+            if(root==nullptr){
+                return ans;
+            }
+            beforeans.push_back(root);
+            Node* encounter = root;
+            Node *temp = root;
+            bool update = true;
+            bool start = false;
+            while(beforeans.size()!=0){
+                temp = (Node*)beforeans.front();
+                if(encounter==temp&&start){
+                    ans.push_back(templist);
+                    templist.clear();
+                    update=true;
+                }
+                start =true;
+                beforeans.pop_front();
+                templist.push_back(temp->name);
+                for ( unsigned int i =0; i<temp->children.size();i++){
+                    if(i==0&&update){
+                        encounter = temp->children.at(i);
+                        update=false;
+                    }
+                    beforeans.push_back(temp->children.at(i));
+                }
+            }
+            ans.push_back(templist);
+            return ans;
+        }
         friend ostream &operator<<(ostream &out, const OrgChart &org){
+            vector<vector<string>> ans ;
+            org.pre_output(ans,org.root);
+            for (unsigned int i=0; i<ans.size();i++){
+                if(i!=0) {
+                    out << endl;
+                }
+                for (unsigned j=0; j<ans.at(i).size();j++){
+                    out<<"--"<<ans[i][j]<<"--";
+                }
+            }
             return out;
         }
+
         class iterator {
         private:
             vector<Node *> traverse;
@@ -70,14 +112,20 @@ namespace ariel {
                     update_traverse_reg(node, 0);
                 }
                 if (type == 'P') {
-                    update_traverse_pre(node, 0);
+                    traverse.erase(traverse.begin());
+                    update_traverse_pre(node);
                 }
                 traverse.push_back(nullptr);
             }
-            void update_traverse_pre(Node *n, unsigned int index){
-
+            void update_traverse_pre(Node *n){
+                if(n== nullptr){
+                    return;
+                }
+                traverse.push_back(n);
+                for (unsigned int i = 0; i <n->children.size() ; ++i) {
+                    update_traverse_pre(n->children.at(i));
+                }
             }
-
             void update_traverse_reverse(Node *n, unsigned int index) {
                 if (traverse.at(index) == traverse.at(traverse.size() - 1) &&
                     (traverse.at(index)->children.size() == 0)) {
