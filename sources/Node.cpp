@@ -4,8 +4,9 @@
 #include <iostream>
 Node::Node(const string &name) {
     this->name = name;
+    this->parent = nullptr;
 }
-Node::~Node() {
-}
+//Node::~Node() {
+//}
 
 
