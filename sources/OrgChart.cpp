@@ -155,21 +155,21 @@ ostream& ariel::operator<<(ostream &out, const OrgChart &org) {
     }
     return out;
 }
-OrgChart::iterator::iterator(Node *node, const char &type) {
+OrgChart::iterator::iterator(Node *node, const int &type) {
         this->current = node;
         if (node != nullptr) {
         traverse.push_back(node);
         }
-        if (type == 'R') {
+        if (type == iterator::State::REVERSE_LEVEL_ORDER) {
         update_traverse_reverse(node, 0);
         current = traverse.at(0);
         }
-        if (type == 'L') {
+        if (type == iterator::State::LEVEL_ORDER) {
             if(node!= nullptr) {
                 update_traverse_reg(node, 0);
             }
         }
-        if (type == 'P') {
+        if (type == iterator::State::PRE_ORDER) {
         traverse.erase(traverse.begin());
         update_traverse_pre(node);
         }
@@ -248,33 +248,33 @@ OrgChart::iterator OrgChart::iterator::operator++(int) {
 
 
 OrgChart::iterator OrgChart::begin_level_order()const {
-    return OrgChart::iterator{root, 'L'};
+    return OrgChart::iterator{root, iterator::State::LEVEL_ORDER};
 }
 
  OrgChart::iterator OrgChart::end_level_order() {
-    return OrgChart::iterator{nullptr, 'N'};
+    return OrgChart::iterator{nullptr, iterator::State::END};
 }
 
 OrgChart::iterator OrgChart::begin_reverse_order()const {
-    return OrgChart::iterator{root, 'R'};
+    return OrgChart::iterator{root, iterator::State::REVERSE_LEVEL_ORDER};
 }
 
  OrgChart::iterator OrgChart::reverse_order() {
-    return OrgChart::iterator{nullptr, 'N'};
+    return OrgChart::iterator{nullptr, iterator::State::END};
 }
 
 OrgChart::iterator OrgChart::begin_preorder() const{
-    return OrgChart::iterator{root, 'P'};
+    return OrgChart::iterator{root, iterator::State::PRE_ORDER};
 }
 
  OrgChart::iterator OrgChart::end_preorder() {
-    return OrgChart::iterator{nullptr, 'N'};
+    return OrgChart::iterator{nullptr, iterator::State::END};
 }
 
 OrgChart::iterator OrgChart::begin() const{
-    return OrgChart::iterator{root, 'L'};
+    return OrgChart::iterator{root, iterator::State::LEVEL_ORDER};
 }
 
  OrgChart::iterator OrgChart::end() {
-     return OrgChart::iterator{nullptr, 'N'};
+     return OrgChart::iterator{nullptr,iterator::State::END};
  }

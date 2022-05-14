@@ -27,7 +27,8 @@ namespace ariel {
             vector<Node *> traverse;
             Node *current;
         public:
-            iterator(Node *node, const char &type) ;
+            iterator(Node *node, const int &type) ;
+            enum State{LEVEL_ORDER,REVERSE_LEVEL_ORDER,PRE_ORDER,END};
             void update_traverse_pre(Node *n) ;
             void update_traverse_reverse(Node *n, unsigned int index) ;
             void update_traverse_reg(Node *n, unsigned int index) ;
