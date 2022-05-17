@@ -9,6 +9,5 @@ class Node{
     vector<Node *> children;
     Node *parent;
     Node(const string & name);
-//    ~Node();
 
 };

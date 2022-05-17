@@ -6,21 +6,24 @@ using namespace std;
 OrgChart::OrgChart() {
     this->root = nullptr;
 }
-OrgChart::OrgChart(OrgChart &&org)noexcept {
-        this->root = org.root;
-        org.root = nullptr;
-}
-OrgChart& OrgChart::operator=(OrgChart &&org)noexcept {
-        traverse_for_delete();
-        this->root = org.root;
-        org.root = nullptr;
-        return *this;
-}
+
 OrgChart::OrgChart(const OrgChart & other){
     traverse_for_copy(other);
 }
 OrgChart::~OrgChart() {
       traverse_for_delete();
+}
+OrgChart::OrgChart(OrgChart &&org)noexcept {
+    this->root = org.root;
+    org.root = nullptr;
+}
+OrgChart& OrgChart::operator=(OrgChart &&org)noexcept {
+    if(this!=&org){
+    traverse_for_delete();
+    this->root = org.root;
+    org.root = nullptr;
+    }
+    return *this;
 }
 void OrgChart::traverse_for_delete(){
     deque <Node*> beforeans;
@@ -129,7 +132,7 @@ vector <vector<string>> OrgChart::pre_output(vector <vector<string>> &ans, Node 
         if(temp!=root) {
             templist.push_back(temp->name + "(PARENT:"+temp->parent->name+")");
         }else{
-            templist.push_back(temp->name + " : ROOT");
+            templist.push_back(temp->name + " : HEAD");
         }
         for (unsigned int i = 0; i < temp->children.size(); i++) {
             if (i == 0 && update) {
@@ -220,17 +223,12 @@ string *OrgChart::iterator::operator->() const {
 }
 
 bool OrgChart::iterator::operator==(const iterator &other) const {
-    if (current == nullptr || other.current == nullptr) {
-        return other.current == current;
-    }
-    return this->current->name == other.current->name;
-
+    return this->current == other.current;
 }
 
 bool OrgChart::iterator::operator!=(const iterator &other) const {
     return !(*this == other);
 }
-
 OrgChart::iterator & OrgChart::iterator::operator++() {
     if (!traverse.empty()) {
         traverse.erase(traverse.begin());

@@ -14,9 +14,9 @@ using namespace std;
 TEST_CASE("add root couple of times"){
    OrgChart org;
    CHECK_NOTHROW(org.add_root("VICE MANGER 1"));
-   CHECK_NOTHROW(cout<<org<<endl);
+//   CHECK_NOTHROW(cout<<org<<endl);
    CHECK_NOTHROW(org.add_root("MANGER"));
-   CHECK_NOTHROW(cout<<org<<endl);
+//   CHECK_NOTHROW(cout<<org<<endl);
    CHECK_THROWS(org.add_sub("EMPLOYEE","LOW EMPLOYEE"));
    CHECK_NOTHROW(org.add_sub("MANGER","VICE MANGER 2"));
    CHECK_NOTHROW(org.add_sub("MANGER","VICE MANGER 3"));
@@ -47,7 +47,7 @@ TEST_CASE("try to add sub to a node that not exist"){
     CHECK_THROWS(org1.add_sub("MANGER2","MANGER"));
     CHECK_NOTHROW(org1.add_sub("MANGER","WORKER"));
     CHECK_NOTHROW(org1.add_sub("WORKER","MANGER"));
-    CHECK_NOTHROW(cout<<org1<<endl);
+//    CHECK_NOTHROW(cout<<org1<<endl);
 }
 TEST_CASE("adding node with same names and check not throwing"){
     OrgChart org1;
@@ -125,7 +125,7 @@ TEST_CASE("CHECK ITERATOR NO THROW AND RIGHT OUTPUT"){
         counter++;
     }
     counter=0;
-    for (auto it3 = org6.begin_reverse_order(); it3 != org6.reverse_order(); ++it3)
+    for (auto it3 = org6.begin_reverse_order(); it3 != org6.reverse_order(); it3++)
     {
         siter3[counter] = *it3;
         counter++;
@@ -134,7 +134,7 @@ TEST_CASE("CHECK ITERATOR NO THROW AND RIGHT OUTPUT"){
     for (auto it4 = org6.begin_preorder(); it4 != org6.end_preorder(); ++it4)
     {
         siter4[counter] = *it4;
-        cout<<*it4<<endl;
+//        cout<<*it4<<endl;
         counter++;
     }
     for (int i = 0; i < 5; ++i) {
@@ -163,7 +163,7 @@ TEST_CASE("GENRATE RANDOM TREE AND  CHECK ITERATORS WILL NOT CRUSH"){
         count++;
         sub = s;
     }
-    for (auto it2 = org2.begin_preorder(); it2 != org2.end_preorder(); ++it2)
+    for (auto it2 = org2.begin_preorder(); it2 != org2.end_preorder(); it2++)
     {
         CHECK_NOTHROW(*it2);
     }
@@ -174,6 +174,40 @@ TEST_CASE("GENRATE RANDOM TREE AND  CHECK ITERATORS WILL NOT CRUSH"){
     for (auto it4 = org2.begin_reverse_order(); it4 != org2.reverse_order(); ++it4)
     {
         CHECK_NOTHROW(*it4);
+    }
+
+}
+TEST_CASE("test iterator -> oprator"){
+
+    OrgChart org;
+    //should look like a linked list
+    vector<int> word_len = {8,7,6,5,4,3,2,1};
+    vector<int> word_len2 = {1,2,3,4,5,6,7,8};
+    org.add_root("A");
+    org.add_root("AA");
+    org.add_root("AAA");
+    org.add_root("AAAA");
+    org.add_root("AAAAA");
+    org.add_root("AAAAAA");
+    org.add_root("AAAAAAA");
+    org.add_root("AAAAAAAA");
+    unsigned int pos = 0;
+    for (auto it = org.begin_level_order(); it != org.end_level_order(); ++it)
+    {
+        CHECK(it->size()==word_len.at(pos));
+        pos++;
+    }
+    pos=0;
+    for (auto it = org.begin_reverse_order(); it != org.reverse_order(); ++it)
+    {
+                CHECK(it->size()==word_len2.at(pos));
+        pos++;
+    }
+    pos=0;
+    for (auto it = org.begin_preorder(); it != org.end_preorder(); it++)
+    {
+                CHECK(it->size()==word_len.at(pos));
+        pos++;
     }
 
 }

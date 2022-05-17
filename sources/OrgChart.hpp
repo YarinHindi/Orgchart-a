@@ -7,8 +7,8 @@
 using namespace std;
 namespace ariel {
     class OrgChart {
-    public:
         Node *root;
+    public:
         OrgChart() ;
         OrgChart(const OrgChart & other);
         ~OrgChart() ;
